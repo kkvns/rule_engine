@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>Rule Engine</title>
+</head>
+<body>
+    <h1>Create Rule</h1>
+    <form id="create-rule-form">
+        <textarea id="rule" placeholder="Enter your rule"></textarea>
+        <button type="button" onclick="createRule()">Create Rule</button>
+    </form>
+
+    <h1>Evaluate Rule</h1>
+    <form id="evaluate-rule-form">
+        <input type="text" id="rule_id" placeholder="Rule ID">
+        <textarea id="data" placeholder="Enter data as JSON"></textarea>
+        <button type="button" onclick="evaluateRule()">Evaluate</button>
+    </form>
+
+    <script>
+        function createRule() {
+            const rule = document.getElementById('rule').value;
+            fetch('/create_rule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rule: rule })
+            }).then(response => response.json())
+              .then(data => alert('Rule Created: ' + JSON.stringify(data)));
+        }
+
+        function evaluateRule() {
+            const ruleId = document.getElementById('rule_id').value;
+            const data = JSON.parse(document.getElementById('data').value);
+            fetch('/evaluate_rule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rule_id: ruleId, data: data })
+            }).then(response => response.json())
+              .then(result => alert('Evaluation Result: ' + result.result));
+        }
+    </script>
+</body>
+</html>
